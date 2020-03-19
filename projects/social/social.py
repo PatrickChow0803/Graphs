@@ -45,6 +45,7 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
+        friendCounter = 0
 
         # Add users
         # Write a for loop that calls create user the right amount of times
@@ -67,7 +68,9 @@ class SocialGraph:
         # total_friendships = avg_friendships * num_users
         for i in range(num_users * avg_friendships // 2):
             friendship = possible_friendships[i]
+            friendCounter = friendCounter + 1
             self.add_friendship(friendship[0], friendship[1])
+        print("Number of times add_friendship() called: " + str(friendCounter))
 
     def get_all_social_paths(self, user_id):
         """
@@ -79,7 +82,31 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+
+        # This queue is actually a list
+        queue = [[user_id]]
+
+        # While there's still an queue
+        while len(queue) > 0:
+
+            # Set the path equal to the list at index 0 and remove the list.
+            path = queue.pop(0)
+
+            # The current node that's getting worked on is the last node from the path.
+            node = path[-1]
+
+            # If the node hasn't been visited yet, set up the corresponding key and value pair.
+            if node not in visited:
+                visited[node] = path
+
+                # Append the friend to the queue if they are friends.
+                for friend in self.friendships[node]:
+                    queue.append([*path, friend])
+
+            # If the node has already been visited, ignore it.
+            else:
+                pass
+
         return visited
 
 
